@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Screen and Audio Recording</string>
+    <string name="accessibility_service_description">Required for capturing internal audio during screen recording</string>
+</resources>
