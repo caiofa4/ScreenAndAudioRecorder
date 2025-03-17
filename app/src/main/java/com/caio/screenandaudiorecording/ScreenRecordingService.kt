@@ -8,9 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
-import android.media.AudioAttributes
-import android.media.AudioFormat
-import android.media.AudioPlaybackCaptureConfiguration
 import android.media.MediaRecorder
 import android.media.projection.MediaProjection
 import android.os.Build
@@ -29,6 +26,7 @@ import kotlinx.coroutines.launch
 import android.util.Log
 
 class ScreenRecordingService : Service() {
+    private val TAG = "ScreenRecordingService"
     private var mediaProjection: MediaProjection? = null
     private var virtualDisplay: VirtualDisplay? = null
     private var mediaRecorder: MediaRecorder? = null
@@ -149,11 +147,11 @@ class ScreenRecordingService : Service() {
             videoFile = currentVideoFile
 
             if (audioFile == null) {
-                Log.i("TESTTAG", "Audio file is null")
+                Log.i(TAG, "Audio file is null")
             }
 
             if (videoFile == null) {
-                Log.i("TESTTAG", "Video file is null")
+                Log.i(TAG, "Video file is null")
             }
 
             mediaRecorder?.apply {
@@ -170,7 +168,7 @@ class ScreenRecordingService : Service() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     if (videoFile != null && audioFile != null) {
-                        val mergedFile = MediaMerger.mergeVideoAndAudio(applicationContext, videoFile, audioFile)
+                        val mergedFile = MediaMerger.mergeVideoAndAudio(videoFile, audioFile)
                         // Delete the separate files after successful merge
                         videoFile.delete()
                         audioFile.delete()

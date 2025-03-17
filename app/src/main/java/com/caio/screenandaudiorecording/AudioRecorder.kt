@@ -1,13 +1,15 @@
 package com.caio.screenandaudiorecording
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioPlaybackCaptureConfiguration
 import android.media.AudioRecord
-import android.media.MediaRecorder
 import android.media.projection.MediaProjection
 import android.os.Environment
+import androidx.core.app.ActivityCompat
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -27,24 +29,13 @@ class AudioRecorder(
     private val channelConfig = AudioFormat.CHANNEL_IN_STEREO
     private val audioFormat = AudioFormat.ENCODING_PCM_16BIT
 
-
     fun startRecording(): File {
         if (isRecording) {
             throw IllegalStateException("Already recording")
         }
 
-//        val bufferSize = AudioRecord.getMinBufferSize(
-//            44100,
-//            AudioFormat.CHANNEL_IN_STEREO,
-//            AudioFormat.ENCODING_PCM_16BIT
-//        )
-
         try {
             // Create the playback capture configuration
-//            val config = AudioPlaybackCaptureConfiguration.Builder(mediaProjection)
-//                .addMatchingUsage(AudioPlaybackCaptureConfiguration.MATCH_MODE_AUDIO_PLAYBACK)
-//                .build()
-
             val config = AudioPlaybackCaptureConfiguration.Builder(mediaProjection)
                 .addMatchingUsage(AudioAttributes.USAGE_MEDIA) // Captura áudio de mídia (música, vídeos, jogos)
                 .build()
@@ -52,16 +43,13 @@ class AudioRecorder(
             val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
 
             // Create AudioRecord instance
-//            audioRecord = AudioRecord.Builder()
-//                .setAudioFormat(AudioFormat.Builder()
-//                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-//                    .setSampleRate(44100)
-//                    .setChannelMask(AudioFormat.CHANNEL_IN_STEREO)
-//                    .build())
-//                .setBufferSizeInBytes(bufferSize)
-//                .setAudioPlaybackCaptureConfig(config)
-//                .build()
-
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.RECORD_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                throw Exception("RECORD_AUDIO permission not granted")
+            }
             audioRecord = AudioRecord.Builder()
                 .setAudioFormat(
                     AudioFormat.Builder()

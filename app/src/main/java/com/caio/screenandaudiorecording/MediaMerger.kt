@@ -1,6 +1,5 @@
 package com.caio.screenandaudiorecording
 
-import android.content.Context
 import android.os.Environment
 import android.util.Log
 import com.arthenica.ffmpegkit.FFmpegKit
@@ -14,7 +13,7 @@ class MediaMerger {
     companion object {
         private const val TAG = "MediaMerger"
 
-        suspend fun mergeVideoAndAudio(context: Context, videoFile: File, audioFile: File): File = suspendCoroutine { continuation ->
+        suspend fun mergeVideoAndAudio(videoFile: File, audioFile: File): File = suspendCoroutine { continuation ->
             // Use public external storage for merged output
             val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
             
